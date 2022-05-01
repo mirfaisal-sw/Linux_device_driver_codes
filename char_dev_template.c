@@ -39,7 +39,7 @@ struct uart_omap_port {
 
 static int my_open(struct inode *i, struct file *f)
 {
-    return 0;  
+	return 0;  
 }
 static int my_close(struct inode *i, struct file *f)
 {
@@ -49,12 +49,12 @@ static int my_close(struct inode *i, struct file *f)
 static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off)
 {
 
-    return len;
+	return len;
 }
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
 {
 		
-		return len;		
+	return len;		
 }
 
 static struct file_operations driver_fops =
