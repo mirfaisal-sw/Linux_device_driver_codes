@@ -110,3 +110,7 @@ void tga_uart_exit(void)
 	unregister_chrdev_region(omap_port->devt, MINOR_CNT);
 	serial_omap_shutdown(&omap_port->port);
 }
+
+
+
+
