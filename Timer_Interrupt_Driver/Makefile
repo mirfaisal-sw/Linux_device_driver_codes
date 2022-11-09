@@ -1,5 +1,5 @@
 
-obj-m += driver.o
+obj-m += timer_driver.o
  
 KDIR = /lib/modules/$(shell uname -r)/build 
  
