@@ -39,14 +39,18 @@ static struct file_operations fops =
 //Timer Callback function. This will be called when timer expires
 void timer_callback(struct timer_list * data)
 {
-    /* do your timer stuff here */
-    pr_info("Timer Callback function Called [%d]\n",count++);
-    
-    /*
-       Re-enable timer. Because this function will be called only first time. 
-       If we re-enable this will work like periodic timer. 
-    */
-    mod_timer(&etx_timer, jiffies + msecs_to_jiffies(TIMEOUT));
+	/* do your timer stuff here */
+	pr_info("Timer Callback function Called [%d]\n",count++);
+	
+	/*Check whether this function is executed in interrupt context*/
+	if (in_interrupt())
+		pr_info("The function - %s is executing in interrupt context\n", __func__);
+
+	/*
+	Re-enable timer. Because this function will be called only first time. 
+	If we re-enable this will work like periodic timer. 
+	*/
+	mod_timer(&etx_timer, jiffies + msecs_to_jiffies(TIMEOUT));
 }
 
 /*
