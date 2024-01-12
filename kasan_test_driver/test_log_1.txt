@@ -1,0 +1,134 @@
+
+Test Log - 1, Date - 12-01-2024
+------------------------------------
+
+Target used for testing: TMDS64EVM
+
+root@am64xx-evm:/opt# insmod kasan_test.ko
+[  351.714584] kasan_test: loading out-of-tree module taints kernel.
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt# ls /proc/test_kasan
+/proc/test_kasan
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt# echo "Hello" > /proc/test_kasan
+[  390.717068] DBG: length - 6
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt# echo "Hello aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" > /proc/test_kasan
+[  400.284983] ==================================================================
+[  400.292264] BUG: KASAN: slab-out-of-bounds in test_kasan_write+0x70/0xfc [kasan_test]
+[  400.300191] Write of size 51 at addr ffff000031091d00 by task sh/550
+[  400.306558]
+[  400.308062] CPU: 1 PID: 550 Comm: sh Tainted: G           O       6.1.46Ashaz #1
+[  400.315476] Hardware name: Texas Instruments AM642 EVM (DT)
+[  400.321056] Call trace:
+[  400.323510]  dump_backtrace.part.0+0xdc/0xf0
+[  400.327828]  show_stack+0x18/0x30
+[  400.331173]  dump_stack_lvl+0x68/0x84
+[  400.334864]  print_report+0x154/0x454
+[  400.338559]  kasan_report+0xa4/0xf0
+[  400.342072]  kasan_check_range+0xe4/0x190
+[  400.346107]  __kasan_check_write+0x28/0x3c
+[  400.350229]  test_kasan_write+0x70/0xfc [kasan_test]
+[  400.355267]  proc_reg_write+0x110/0x174
+[  400.359140]  vfs_write+0x154/0x420
+[  400.362570]  ksys_write+0xc4/0x170
+[  400.365999]  __arm64_sys_write+0x44/0x60
+[  400.369950]  invoke_syscall+0x60/0x190
+[  400.373732]  el0_svc_common.constprop.0+0x128/0x160
+[  400.378640]  do_el0_svc+0x44/0xf0
+[  400.381985]  el0_svc+0x2c/0x6c
+[  400.385063]  el0t_64_sync_handler+0xbc/0x140
+[  400.389359]  el0t_64_sync+0x18c/0x190
+[  400.393043]
+[  400.394539] Allocated by task 565:
+[  400.397950]  kasan_save_stack+0x2c/0x60
+[  400.401806]  kasan_set_track+0x2c/0x40
+[  400.405574]  kasan_save_alloc_info+0x24/0x3c
+[  400.409867]  __kasan_kmalloc+0xa0/0xc0
+[  400.413634]  kmalloc_trace+0x58/0x6c
+[  400.417236]  0xffff800001b0202c
+[  400.420400]  do_one_initcall+0xa8/0x280
+[  400.424256]  do_init_module+0xc8/0x2c0
+[  400.428036]  load_module+0x2688/0x2af4
+[  400.431812]  __do_sys_finit_module+0x100/0x170
+[  400.436283]  __arm64_sys_finit_module+0x44/0x60
+[  400.440842]  invoke_syscall+0x60/0x190
+[  400.444619]  el0_svc_common.constprop.0+0x128/0x160
+[  400.449526]  do_el0_svc+0x44/0xf0
+[  400.452869]  el0_svc+0x2c/0x6c
+[  400.455946]  el0t_64_sync_handler+0xbc/0x140
+[  400.460240]  el0t_64_sync+0x18c/0x190
+[  400.463921]
+[  400.465417] Last potentially related work creation:
+[  400.470296]  kasan_save_stack+0x2c/0x60
+[  400.474151]  __kasan_record_aux_stack+0x9c/0xd0
+[  400.478705]  kasan_record_aux_stack_noalloc+0x14/0x20
+[  400.483780]  kvfree_call_rcu+0xac/0x430
+[  400.487649]  kernfs_unlink_open_file+0x17c/0x1b0
+[  400.492295]  kernfs_fop_release+0x64/0x16c
+[  400.496416]  __fput+0xcc/0x3a0
+[  400.499498]  ____fput+0x10/0x20
+[  400.502666]  task_work_run+0x124/0x1b0
+[  400.506452]  do_notify_resume+0x308/0x19fc
+[  400.510592]  el0_svc+0x54/0x6c
+[  400.513677]  el0t_64_sync_handler+0xbc/0x140
+[  400.517972]  el0t_64_sync+0x18c/0x190
+[  400.521654]
+[  400.523150] The buggy address belongs to the object at ffff000031091d00
+[  400.523150]  which belongs to the cache kmalloc-128 of size 128
+[  400.535673] The buggy address is located 0 bytes inside of
+[  400.535673]  128-byte region [ffff000031091d00, ffff000031091d80)
+[  400.547246]
+[  400.548743] The buggy address belongs to the physical page:
+[  400.554325] page:00000000f9a57121 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xb1091
+[  400.563646] flags: 0x3fffc0000000200(slab|node=0|zone=0|lastcpupid=0xffff)
+[  400.570564] raw: 03fffc0000000200 fffffc0000f711c0 dead000000000004 ffff000000002300
+[  400.578322] raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+[  400.586068] page dumped because: kasan: bad access detected
+[  400.591643]
+[  400.593139] Memory state around the buggy address:
+[  400.597938]  ffff000031091c00: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+[  400.605171]  ffff000031091c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  400.612402] >ffff000031091d00: 00 06 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  400.619628]                       ^
+[  400.623126]  ffff000031091d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[  400.630359]  ffff000031091e00: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+[  400.637585] ==================================================================
+[  400.645616] Disabling lock debugging due to kernel taint
+[  400.651192] DBG: length - 51
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+root@am64xx-evm:/opt#
+
+Config macros enabled: -
+-----------------------
+root@am64xx-evm:/opt# zcat /proc/config.gz | grep KASAN
+CONFIG_KASAN_SHADOW_OFFSET=0xdfff800000000000
+CONFIG_HAVE_ARCH_KASAN=y
+CONFIG_HAVE_ARCH_KASAN_SW_TAGS=y
+CONFIG_HAVE_ARCH_KASAN_HW_TAGS=y
+CONFIG_HAVE_ARCH_KASAN_VMALLOC=y
+CONFIG_CC_HAS_KASAN_GENERIC=y
+CONFIG_CC_HAS_KASAN_SW_TAGS=y
+CONFIG_KASAN=y
+CONFIG_KASAN_GENERIC=y
+# CONFIG_KASAN_SW_TAGS is not set
+# CONFIG_KASAN_HW_TAGS is not set
+CONFIG_KASAN_OUTLINE=y
+# CONFIG_KASAN_INLINE is not set
+CONFIG_KASAN_STACK=y
+CONFIG_KASAN_VMALLOC=y
+# CONFIG_KASAN_MODULE_TEST is not set
+root@am64xx-evm:/opt#
+
