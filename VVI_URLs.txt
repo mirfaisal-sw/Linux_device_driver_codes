@@ -1,0 +1,7 @@
+
+
+1. Kernel coding style:-
+  https://www.kernel.org/doc/html/next/process/coding-style.html
+
+2. Linux driver sample codes: -
+https://sysprog21.github.io/lkmpg/#the-proc-file-system
